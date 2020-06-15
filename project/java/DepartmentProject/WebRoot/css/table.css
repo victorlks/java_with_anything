@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+table.blueTable {
+  border: 1px solid #1C6EA4;
+  background-color: #EEEEEE;
+  width: 30%;
+  margin-left:auto;
+  margin-right:auto;
+  border-collapse: collapse;
+}
+table.blueTable td {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tr td {
+  font-size: 13px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}

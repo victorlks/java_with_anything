@@ -1,0 +1,35 @@
+@CHARSET "UTF-8";
+
+body{
+	width:80%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.departmentForm{
+	
+}
+
+.employeeForm{
+	
+}
+
+.header{
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.header ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.header ul li {
+	display: inline-block;
+	text-align: center;
+}
+
+.header ul li a {
+	text-decoration: none;
+}
