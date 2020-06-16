@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -100,6 +101,57 @@ public class DepartmentDAOImpl extends AbstractBaseDAO implements IDepartmentDAO
 	@Override
 	public Long getAllCount(String column, String keyWord) throws Exception {
 		return this.getAllCountHandle(column, keyWord, "department");
+	}
+
+	@Override
+	public List<Department> findAllStatus() throws Exception {
+		String sql = "SELECT d.did,d.dname,d.dlocation,COUNT(*) number,AVG(e.esalary) avg,MAX(e.esalary) max,MIN(e.esalary) min,SUM(e.esalary) sum  "
+				+ " FROM department d,employee e WHERE e.edepartmentid=d.did GROUP BY d.did";
+		List<Department> all = new ArrayList<Department>();
+		Department vo = null;
+		this.pstmt = this.conn.prepareStatement(sql);
+		ResultSet rs = this.pstmt.executeQuery();
+		while(rs.next()){
+			vo = new Department();
+			vo.setDid(rs.getLong(1));
+			vo.setDname(rs.getString(2));
+			vo.setDlocation(rs.getString(3));
+			if(vo.getStatus() == null){
+				vo.setStatus(new HashMap<String,Object>());
+			}
+			vo.getStatus().put("totalPerson", rs.getLong(4));
+			vo.getStatus().put("averageSalary", rs.getDouble(5));
+			vo.getStatus().put("maxSalary", rs.getDouble(6));
+			vo.getStatus().put("minSalary", rs.getDouble(7));
+			vo.getStatus().put("totalSalary", rs.getDouble(8));
+			all.add(vo);
+		}
+		return all;
+	}
+
+	@Override
+	public Department findByIdDetails(Long id) throws Exception {
+		String sql = "SELECT d.did,d.dname,d.dlocation,COUNT(*) number,AVG(e.esalary) avg,MAX(e.esalary) max,MIN(e.esalary) min,SUM(e.esalary) sum  "
+				+ " FROM department d,employee e WHERE e.edepartmentid=d.did AND d.did=?";
+		Department vo = null;
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setLong(1, id);
+		ResultSet rs = this.pstmt.executeQuery();
+		if(rs.next()){
+			vo = new Department();
+			vo.setDid(rs.getLong(1));
+			vo.setDname(rs.getString(2));
+			vo.setDlocation(rs.getString(3));
+			if(vo.getStatus() == null){
+				vo.setStatus(new HashMap<String,Object>());
+			}
+			vo.getStatus().put("totalPerson", rs.getLong(4));
+			vo.getStatus().put("averageSalary", rs.getDouble(5));
+			vo.getStatus().put("maxSalary", rs.getDouble(6));
+			vo.getStatus().put("minSalary", rs.getDouble(7));
+			vo.getStatus().put("totalSalary", rs.getDouble(8));
+		}
+		return vo;
 	}
 
 	

@@ -23,5 +23,5 @@ public interface IDepartmentDAO extends IBaseDAO<Long, Department> {
 	 * @return 如果查询出此部门的信息，则以对象的形式返回，否则返回null；
 	 * @throws Exception
 	 */
-	public List<Department> findByIdDetails(Long id) throws Exception;
+	public Department findByIdDetails(Long id) throws Exception;
 }

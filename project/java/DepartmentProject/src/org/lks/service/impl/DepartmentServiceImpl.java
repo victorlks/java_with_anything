@@ -90,4 +90,26 @@ public class DepartmentServiceImpl implements IDepartmentService{
 		}
 	}
 
+	@Override
+	public List<Department> listDetails() throws Exception {
+		try{
+			return DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findAllStatus();
+		}catch(Exception e){
+			throw e;
+		}finally{
+			this.databaseConnection.close();
+		}
+	}
+
+	@Override
+	public Department show(Long id) throws Exception {
+		try{
+			return DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findByIdDetails(id);
+		}catch(Exception e){
+			throw e;
+		}finally{
+			this.databaseConnection.close();
+		}
+	}
+
 }
