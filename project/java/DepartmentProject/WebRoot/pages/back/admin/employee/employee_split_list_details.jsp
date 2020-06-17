@@ -10,7 +10,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 String updateUrl = basePath + "pages/back/admin/employee/" + "employee_update.jsp";
 String deleteUrl = basePath + "pages/back/admin/employee/" + "employee_delete_do.jsp";
 String insertUrl = basePath + "pages/back/admin/employee/" + "employee_insert.jsp";
-String showUrl = basePath + "pages/back/admin/employee/" + "employee_show.jsp";
+String showEmployeeUrl = basePath + "pages/back/admin/employee/" + "employee_show.jsp";
+String showDepartmentUrl = basePath + "pages/back/admin/department/" + "department_show.jsp";
 String searchColumns = "编号:eid|名字:ename|职位:ejob";
 String location = basePath + "pages/back/admin/employee/" + "employee_split_list_details.jsp";
 %>
@@ -75,7 +76,7 @@ String location = basePath + "pages/back/admin/employee/" + "employee_split_list
     <div id="showData">
     	<table border="1" style="width:80%;">
 	    	<tr>
-	    		<td colspan="9" style="text-align:center"><h1>雇员列表</h1></td>
+	    		<td colspan="10" style="text-align:center"><h1>雇员列表</h1></td>
 	    	</tr>
 	    	<tr>
 	    		<th><input type="checkbox" name="selectAll" id="selectAll" onclick="selectAll(this)"/></th>
@@ -85,6 +86,7 @@ String location = basePath + "pages/back/admin/employee/" + "employee_split_list
 	    		<th>雇佣日期</th>
 	    		<th>薪资</th>
 	    		<th>奖金</th>
+	    		<th>部门</th>
 	    		<th>领导</th>
 	    		<th>操作</th>
 	    	</tr>
@@ -94,19 +96,20 @@ String location = basePath + "pages/back/admin/employee/" + "employee_split_list
 			<tr style="text-align:center">
 				<td><input type="checkbox" name="select" id="select" value="<%=all.get(i).getEid()%>"/></td>
 				<td><%=all.get(i).getEid()%></td>
-				<td><a style="text-decoration:none;color:green;cursor:pointer" onclick="detailsInfo('<%=showUrl%>?&eid=<%=all.get(i).getEid()%>')"><%=all.get(i).getEname()%></a></td>
+				<td><a style="text-decoration:none;color:green;cursor:pointer" onclick="detailsInfo('<%=showEmployeeUrl%>?&eid=<%=all.get(i).getEid()%>')"><%=all.get(i).getEname()%></a></td>
 				<td><%=all.get(i).getEjob()%></td>
 				<td><%=all.get(i).getEhiredate()%></td>
 				<td><%=all.get(i).getEsalary()%></td>
 				<td><%=all.get(i).getEbonus()%></td>
-				<td><%=all.get(i).getEmanager().getEname()%></td>
+				<td><a style="text-decoration:none;color:green;cursor:pointer" onclick="detailsInfo('<%=showDepartmentUrl%>?&did=<%=all.get(i).getEdepartment().getDid()%>')"><%=all.get(i).getEdepartment().getDname()%></a></td>
+				<td><a style="text-decoration:none;color:green;cursor:pointer" onclick="detailsInfo('<%=showEmployeeUrl%>?&eid=<%=all.get(i).getEmanager().getEid()%>')"><%=all.get(i).getEmanager().getEname()%></a></td>
 				<td><a href="<%=updateUrl %>?eid=<%=all.get(i).getEid()%>&backUrl=<%=location%>&currentPage=<%=currentPage%>&lineSize=<%=lineSize%>&column=<%=column%>&keyWord=<%=keyWord%>">修改</a></td>
 			</tr>
 <%
 		} 
 %>
 		<tr>
-			<td colspan="9">
+			<td colspan="10">
 				<button type="button" onclick="return deleteById('<%=deleteUrl%>','&backUrl=<%=location%>&currentPage=<%=currentPage%>&lineSize=<%=lineSize%>&column=<%=column%>&keyWord=<%=keyWord%>')">删除</button>
 				<button type="button" onclick="window.location='<%=insertUrl%>'">增加</button>
 			</td>

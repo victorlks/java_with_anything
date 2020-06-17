@@ -67,6 +67,10 @@ StringBuffer backUrl = new StringBuffer(basePath + "pages/back/admin/employee/" 
 		 vo.setEmanager(new Employee());
 		 vo.getEmanager().setEid(Long.parseLong(request.getParameter("emanager")));
 	 }
+	 if(Long.parseLong(request.getParameter("edepartmentid")) != 0){
+		 vo.setEmanager(new Employee());
+		 vo.getEmanager().setEid(Long.parseLong(request.getParameter("edepartmentid")));
+	 }
 	String promptMessage = "Modify Fail!";
 	if(ServiceFactory.getIEmployeeServiceInstance().update(vo)){
 		promptMessage = "Modify Success!";

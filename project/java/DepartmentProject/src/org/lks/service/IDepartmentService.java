@@ -75,5 +75,5 @@ public interface IDepartmentService {
 	 * @return 如果有部门信息则以VO对象的形式返回，否则返回null
 	 * @throws Exception
 	 */
-	public Department show(Long id) throws Exception; 
+	public Department show(long id, int currentPage, int lineSize, String column, String keyWord) throws Exception; 
 }

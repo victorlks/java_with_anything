@@ -74,6 +74,7 @@ public interface IEmployeeService {
 	 * 表示在进行雇员增加前的准备操作，因为要增加雇员前需要查询出所有的雇员和所有的部门数据
 	 * @return 返回两组信息，一个是全部的雇员信息，另外一个是全部的部门信息：<br>
 	 * <li>key = allEmployees, value = IEmployeeDAO.findAll()查询出所有的雇员
+	 * <li>key = allDepartments, value = IDepartmentDAO.findAll()查询出所有的部门
 	 * @throws Exception SQL执行异常
 	 */
 	public Map<String,Object> insertPre() throws Exception;
@@ -84,6 +85,7 @@ public interface IEmployeeService {
 	 * @return 返回三种信息<br>
 	 * <li>key = allEmployees, value = IEmployeeDAO.findAll()查询出所有的雇员
 	 * <li>key = employee, value = IEmployeeDAO.findByIDDetails()查询雇员完整信息
+	 * <li>key = allDepartments, value = IDepartmentDAO.findAll()查询出所有的部门
 	 * @throws Exception SQL执行异常
 	 */
 	public Map<String,Object> updatePre(long id) throws Exception;

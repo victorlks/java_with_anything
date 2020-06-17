@@ -101,6 +101,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 		try{
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("allEmployees", DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).findAll());
+			map.put("allDepartments", DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findAll());
 			return map;
 		}catch(Exception e){
 			throw e;
@@ -115,6 +116,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("allEmployees", DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).findAll());
 			map.put("employee", DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).findByIdDetails(id));
+			map.put("allDepartments", DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findAll());
 			return map;
 		}catch(Exception e){
 			throw e;
@@ -130,6 +132,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("allEmployees", DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).findAllSplitDetails(currentPage, lineSize, column, keyWord));
 			map.put("employeeCount", DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).getAllCount(column, keyWord));
+			map.put("allDepartments", DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findAll());
 			return map;
 		}catch(Exception e){
 			throw e;

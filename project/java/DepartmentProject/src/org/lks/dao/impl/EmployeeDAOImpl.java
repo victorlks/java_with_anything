@@ -23,7 +23,7 @@ public class EmployeeDAOImpl extends AbstractBaseDAO implements IEmployeeDAO {
 	
 	@Override
 	public boolean doCreate(Employee vo) throws Exception {
-		String sql = "INSERT INTO employee(eid,ename,ejob,ehiredate,esalary,ebonus,emanager,edapartmentid) VALUES(?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO employee(eid,ename,ejob,ehiredate,esalary,ebonus,emanager,edepartmentid) VALUES(?,?,?,?,?,?,?,?)";
 		this.pstmt = this.conn.prepareStatement(sql);
 		this.pstmt.setLong(1, vo.getEid());
 		this.pstmt.setString(2, vo.getEname());
@@ -181,7 +181,7 @@ public class EmployeeDAOImpl extends AbstractBaseDAO implements IEmployeeDAO {
 		List<Employee> all = new ArrayList<Employee>();
 		Employee vo = null;
 		String sql = "SELECT e1.eid,e1.ename,e1.ejob,e1.ehiredate,e1.esalary,e1.ebonus,e2.eid emanagereid,e2.ename emanagerename,d.did,d.dname "
-				+ " FROM employee e1,employee e2 WHERE e1.emanager=e2.eid AND d.did=e1.edepartmentid AND e1." + column + " LIKE ? LIMIT ?,?";
+				+ " FROM employee e1,employee e2,department d WHERE e1.emanager=e2.eid AND d.did=e1.edepartmentid AND e1." + column + " LIKE ? LIMIT ?,?";
 		this.pstmt = this.conn.prepareStatement(sql);
 		this.pstmt.setString(1, "%" + keyWord + "%");
 		this.pstmt.setInt(2, (currentPage-1) * lineSize);
@@ -219,9 +219,9 @@ public class EmployeeDAOImpl extends AbstractBaseDAO implements IEmployeeDAO {
 				+ " FROM employee e1,employee e2 WHERE e1.emanager=e2.eid AND e1.edepartmentid=? AND e1." + column + " LIKE ? LIMIT ?,?";
 		this.pstmt = this.conn.prepareStatement(sql);
 		this.pstmt.setLong(1, id);
-		this.pstmt.setString(1, "%" + keyWord + "%");
-		this.pstmt.setInt(2, (currentPage-1) * lineSize);
-		this.pstmt.setInt(3, lineSize);
+		this.pstmt.setString(2, "%" + keyWord + "%");
+		this.pstmt.setInt(3, (currentPage-1) * lineSize);
+		this.pstmt.setInt(4, lineSize);
 		ResultSet rs = this.pstmt.executeQuery();
 		while(rs.next()){
 			vo = new Employee();
@@ -235,11 +235,6 @@ public class EmployeeDAOImpl extends AbstractBaseDAO implements IEmployeeDAO {
 				vo.setEmanager(new Employee());
 				vo.getEmanager().setEid(rs.getLong(7));
 				vo.getEmanager().setEname(rs.getString(8));
-			}
-			if(rs.getLong(9) != 0){
-				vo.setEdepartment(new Department());
-				vo.getEdepartment().setDid(rs.getLong(9));
-				vo.getEdepartment().setDname(rs.getString(10));
 			}
 			all.add(vo);
 		}

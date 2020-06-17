@@ -1,0 +1,249 @@
+package org.lks.dao.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.lks.dao.IEmployeeDAO;
+import org.lks.dao.util.AbstractBaseDAO;
+import org.lks.vo.Department;
+import org.lks.vo.Employee;
+
+public class EmployeeDAOImpl extends AbstractBaseDAO implements IEmployeeDAO {
+
+	private PreparedStatement pstmt = null;
+	
+	public EmployeeDAOImpl(Connection conn){
+		super(conn);
+	}
+	
+	@Override
+	public boolean doCreate(Employee vo) throws Exception {
+		String sql = "INSERT INTO employee(eid,ename,ejob,ehiredate,esalary,ebonus,emanager,edapartmentid) VALUES(?,?,?,?,?,?,?,?)";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setLong(1, vo.getEid());
+		this.pstmt.setString(2, vo.getEname());
+		this.pstmt.setString(3, vo.getEjob());
+		this.pstmt.setDate(4, new java.sql.Date(vo.getEhiredate().getTime()));
+		this.pstmt.setDouble(5, vo.getEsalary());
+		this.pstmt.setDouble(6, vo.getEbonus());
+		if(vo.getEmanager() == null){
+			this.pstmt.setNull(7, Types.NULL);
+		}else{
+			this.pstmt.setLong(7, vo.getEmanager().getEid());
+		}
+		if(vo.getEdepartment() == null){
+			this.pstmt.setNull(8, Types.NULL);
+		}else{
+			this.pstmt.setLong(8, vo.getEdepartment().getDid());
+		}
+		return this.pstmt.executeUpdate() > 0;
+	}
+
+	@Override
+	public boolean doUpdate(Employee vo) throws Exception {
+		String sql = "UPDATE employee SET ename=?,ejob=?,ehiredate=?,esalary=?,ebonus=?,emanager=?,edepartmentid=? WHERE eid=?";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setString(1, vo.getEname());
+		this.pstmt.setString(2, vo.getEjob());
+		this.pstmt.setDate(3, new java.sql.Date(vo.getEhiredate().getTime()));
+		this.pstmt.setDouble(4, vo.getEsalary());
+		this.pstmt.setDouble(5, vo.getEbonus());
+		if(vo.getEmanager() == null){
+			this.pstmt.setNull(6, Types.NULL);
+		}else{
+			this.pstmt.setLong(6, vo.getEmanager().getEid());
+		}
+		if(vo.getEdepartment() == null){
+			this.pstmt.setNull(7, Types.NULL);
+		}else{
+			this.pstmt.setLong(7, vo.getEdepartment().getDid());
+		}
+		this.pstmt.setLong(8, vo.getEid());
+		return this.pstmt.executeUpdate() > 0;
+	}
+
+	@Override
+	public boolean doRemoveBatch(Set<Long> ids) throws Exception {
+		return this.removeHandle(ids, "employee", "eid");
+	}
+
+	@Override
+	public Employee findById(Long id) throws Exception {
+		Employee vo = null;
+		String sql = "SELECT eid,ename,ejob,ehiredate,esalary,ebonus FROM employee WHERE eid=?";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setLong(1, id);
+		ResultSet rs = this.pstmt.executeQuery();
+		if(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+		}
+		return vo;
+	}
+
+	@Override
+	public List<Employee> findAll() throws Exception {
+		List<Employee> all = new ArrayList<Employee>();
+		Employee vo = null;
+		String sql = "SELECT eid,ename,ejob,ehiredate,esalary,ebonus FROM employee";
+		this.pstmt = this.conn.prepareStatement(sql);
+		ResultSet rs = this.pstmt.executeQuery();
+		while(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+			all.add(vo);
+		}
+		return all;
+	}
+
+	@Override
+	public List<Employee> findAllSplit(Integer currentPage, Integer lineSize, String column, String keyWord)
+			throws Exception {
+		String sql = "SELECT eid,ename,ejob,ehiredate,esalary,ebonus FROM employee WHERE " + column + " LIKE ? LIMIT ?,?";
+		List<Employee> all = new ArrayList<Employee>();
+		Employee vo = null;
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setString(1, "%" + keyWord + "%");
+		this.pstmt.setInt(2, (currentPage-1) * lineSize);
+		this.pstmt.setInt(3, lineSize);
+		ResultSet rs = this.pstmt.executeQuery();
+		while(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+			all.add(vo);
+		}
+		return all;
+	}
+
+	@Override
+	public Long getAllCount(String column, String keyWord) throws Exception {
+		return this.getAllCountHandle(column, keyWord, "employee");
+	}
+
+	@Override
+	public void doRemoveBatchByDepartmentId(Set<Long> ids) throws Exception {
+		this.removeHandle(ids, "employee", "edepartmentid");
+	}
+
+	@Override
+	public Employee findByIdDetails(Long id) throws Exception {
+		Employee vo = null;
+		String sql = "SELECT e1.eid,e1.ename,e1.ejob,e1.ehiredate,e1.esalary,e1.ebonus,e2.eid emanagereid,e2.ename emanagerename,d.did,d.dname "
+				+ " FROM employee e1,employee e2,department d WHERE e1.emanager=e2.eid AND d.did=e1.edepartmentid AND e1.eid=?";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setLong(1, id);
+		ResultSet rs = this.pstmt.executeQuery();
+		if(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+			if(rs.getLong(7) != 0){
+				vo.setEmanager(new Employee());
+				vo.getEmanager().setEid(rs.getLong(7));
+				vo.getEmanager().setEname(rs.getString(8));
+			}
+			if(rs.getLong(9) != 0){
+				vo.setEdepartment(new Department());
+				vo.getEdepartment().setDid(rs.getLong(9));
+				vo.getEdepartment().setDname(rs.getString(10));
+			}
+		}
+		return vo;
+	}
+
+	@Override
+	public List<Employee> findAllSplitDetails(Integer currentPage, Integer lineSize, String column, String keyWord)
+			throws Exception {
+		List<Employee> all = new ArrayList<Employee>();
+		Employee vo = null;
+		String sql = "SELECT e1.eid,e1.ename,e1.ejob,e1.ehiredate,e1.esalary,e1.ebonus,e2.eid emanagereid,e2.ename emanagerename,d.did,d.dname "
+				+ " FROM employee e1,employee e2 WHERE e1.emanager=e2.eid AND d.did=e1.edepartmentid AND e1." + column + " LIKE ? LIMIT ?,?";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setString(1, "%" + keyWord + "%");
+		this.pstmt.setInt(2, (currentPage-1) * lineSize);
+		this.pstmt.setInt(3, lineSize);
+		ResultSet rs = this.pstmt.executeQuery();
+		while(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+			if(rs.getLong(7) != 0){
+				vo.setEmanager(new Employee());
+				vo.getEmanager().setEid(rs.getLong(7));
+				vo.getEmanager().setEname(rs.getString(8));
+			}
+			if(rs.getLong(9) != 0){
+				vo.setEdepartment(new Department());
+				vo.getEdepartment().setDid(rs.getLong(9));
+				vo.getEdepartment().setDname(rs.getString(10));
+			}
+			all.add(vo);
+		}
+		return all;
+	}
+
+	@Override
+	public List<Employee> findAllByDepartmentId(Long id, Integer currentPage, Integer lineSize, String column,
+			String keyWord) throws Exception {
+		List<Employee> all = new ArrayList<Employee>();
+		Employee vo = null;
+		String sql = "SELECT e1.eid,e1.ename,e1.ejob,e1.ehiredate,e1.esalary,e1.ebonus,e2.eid emanagereid,e2.ename emanagerename "
+				+ " FROM employee e1,employee e2 WHERE e1.emanager=e2.eid AND e1.edepartmentid=? AND e1." + column + " LIKE ? LIMIT ?,?";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setLong(1, id);
+		this.pstmt.setString(1, "%" + keyWord + "%");
+		this.pstmt.setInt(2, (currentPage-1) * lineSize);
+		this.pstmt.setInt(3, lineSize);
+		ResultSet rs = this.pstmt.executeQuery();
+		while(rs.next()){
+			vo = new Employee();
+			vo.setEid(rs.getLong(1));
+			vo.setEname(rs.getString(2));
+			vo.setEjob(rs.getString(3));
+			vo.setEhiredate(rs.getDate(4));
+			vo.setEsalary(rs.getDouble(5));
+			vo.setEbonus(rs.getDouble(6));
+			if(rs.getLong(7) != 0){
+				vo.setEmanager(new Employee());
+				vo.getEmanager().setEid(rs.getLong(7));
+				vo.getEmanager().setEname(rs.getString(8));
+			}
+			if(rs.getLong(9) != 0){
+				vo.setEdepartment(new Department());
+				vo.getEdepartment().setDid(rs.getLong(9));
+				vo.getEdepartment().setDname(rs.getString(10));
+			}
+			all.add(vo);
+		}
+		return all;
+	}
+
+}

@@ -102,9 +102,11 @@ public class DepartmentServiceImpl implements IDepartmentService{
 	}
 
 	@Override
-	public Department show(Long id) throws Exception {
+	public Department show(long id, int currentPage, int lineSize, String column, String keyWord) throws Exception {
 		try{
-			return DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findByIdDetails(id);
+			Department department = DAOFactory.getIDepartmentDAOInstance(this.databaseConnection.getConnection()).findByIdDetails(id);
+			department.setEmployees(DAOFactory.getIEmployeeDAOInstance(this.databaseConnection.getConnection()).findAllByDepartmentId(id, currentPage, lineSize, column, keyWord));;
+			return department;
 		}catch(Exception e){
 			throw e;
 		}finally{

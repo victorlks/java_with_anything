@@ -72,6 +72,7 @@ public class IDepartmentServiceTest {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testList2(){
 		try {

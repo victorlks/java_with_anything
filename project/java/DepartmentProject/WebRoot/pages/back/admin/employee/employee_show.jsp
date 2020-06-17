@@ -22,11 +22,6 @@ Employee vo = ServiceFactory.getIEmployeeServiceInstance().show(Long.parseLong(r
   </head>
   
   <body>
-  <div class="header">
-  		<ul>
-  			<li><a href="<%=listUrl%>">雇员列表</a></li>
-  		</ul>
-  	</div>
   	<div class="employeeTable">
   		<table class="blueTable" style="width:100%;text-align:center">
   			<tr>
@@ -58,7 +53,7 @@ Employee vo = ServiceFactory.getIEmployeeServiceInstance().show(Long.parseLong(r
   			</tr>
   			<tr>
   				<td><span id="emanagerTitle">领导</span></td>
-  				<td><%=vo.getEmanager().getEname()%></td>
+  				<td><%=(vo.getEmanager().getEid().equals(vo.getEid()) ? "无" : vo.getEmanager().getEname())%></td>
   			</tr>
   			<tr>
   				<td colspan="2" style="text-align:center">
