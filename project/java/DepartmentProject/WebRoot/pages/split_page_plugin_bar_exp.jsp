@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
 
 <%
     request.setCharacterEncoding("UTF-8");
@@ -12,6 +13,7 @@
     String location = "";
     int[] lineSizeData = new int[]{1, 5, 10, 15, 20, 30, 50, 100};
     int sideNumber = 3;
+  	long departmentid = 0L;
 %>
 <%//接收数据
     try{
@@ -24,6 +26,9 @@
         allRecorders = Long.parseLong(request.getParameter("allRecorders"));
     }catch(Exception e){}
     location = request.getParameter("location");
+    try{
+        departmentid = Long.parseLong(request.getParameter("did"));
+    }catch(Exception e){}
 %>
 <%//计算总页数
     pageSize = (allRecorders.intValue() + lineSize - 1) / lineSize;
@@ -38,9 +43,9 @@
         try{
             var keyWord = document.getElementById("keyWord").value;
             var searchColumn = document.getElementById("searchColumnSelect").value;
-            window.location = "<%=location%>" + "?currentPage=" + page + "&lineSize=" + size + "&keyWord=" + keyWord + "&column=" + searchColumn;
+            window.location = "<%=location%>" + "?currentPage=" + page + "&lineSize=" + size + "&keyWord=" + keyWord + "&column=" + searchColumn + "&did=<%=departmentid%>";
         }catch(Exception){
-            window.location = "<%=location%>" + "?currentPage=" + page + "&lineSize=" + size;
+            window.location = "<%=location%>" + "?currentPage=" + page + "&lineSize=" + size + "&did=<%=departmentid%>";
         }
     }
 </script>

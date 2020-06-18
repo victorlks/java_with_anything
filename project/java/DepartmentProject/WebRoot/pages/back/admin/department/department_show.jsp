@@ -20,6 +20,7 @@ String location = showDepartmentUrl;
 	int lineSize = 5;
 	String column = "ename";
 	String keyWord = "";
+	long departmentid = Long.parseLong(request.getParameter("did"));
 %>
 
 <%//接收客户端数据
@@ -35,6 +36,7 @@ String location = showDepartmentUrl;
     if(request.getParameter("column") != null){
         column = request.getParameter("column");
     }
+    
 %>
 
 <%//接受完数据后的数据判断
@@ -50,7 +52,7 @@ String location = showDepartmentUrl;
 %>
 
 <%
-Department vo = ServiceFactory.getIDepartmentServiceInstance().show(Long.parseLong(request.getParameter("did")), currentPage, lineSize, column, keyWord);
+Department vo = ServiceFactory.getIDepartmentServiceInstance().show(departmentid, currentPage, lineSize, column, keyWord);
 List<Employee> all = vo.getEmployees();
 long allRecorders = (long)vo.getStatus().get("totalPerson");
 %>
@@ -116,6 +118,7 @@ long allRecorders = (long)vo.getStatus().get("totalPerson");
 	        <jsp:param name="column" value="<%=column%>"/>
 	        <jsp:param name="keyWord" value="<%=keyWord%>"/>
 	        <jsp:param name="location" value="<%=location%>"/>
+	        <jsp:param name="did" value="<%=departmentid%>"/>
   		</jsp:include>
   	</div>
   	<div id="showDepartmentEmployee">
@@ -166,6 +169,7 @@ long allRecorders = (long)vo.getStatus().get("totalPerson");
 		        <jsp:param name="lineSize" value="<%=lineSize%>"/>
 		        <jsp:param name="allRecorders" value="<%=allRecorders%>"/>
 		        <jsp:param name="location" value="<%=location%>"/>
+		        <jsp:param name="did" value="<%=departmentid%>"/>
 	  		</jsp:include>
 	  	</div>
 	  </div>
